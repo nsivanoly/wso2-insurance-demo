@@ -59,7 +59,7 @@ services:
       - "${MI_ADMIN_PORT:-9164}:9164"
       
       # Integration Control Plane
-      - "9743:9743"
+      - "${ICP_PORT:-9743}:9743"
       
       # Frontend (Vite)
       - "${FRONTEND_PORT:-5173}:5173"
