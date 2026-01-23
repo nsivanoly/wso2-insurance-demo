@@ -6,6 +6,8 @@
 
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat&logo=docker)](https://www.docker.com/)
 [![WSO2](https://img.shields.io/badge/WSO2-API%20Manager%204.6.0-orange)](https://wso2.com/api-manager/)
+[![WSO2](https://img.shields.io/badge/WSO2-Identity%20and%20Access%20Management%207.2.0-orange)](https://wso2.com/identity-and-access-management/)
+[![WSO2](https://img.shields.io/badge/WSO2-Integration%204.5.0-orange)](https://wso2.com/integration/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react)](https://reactjs.org/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
