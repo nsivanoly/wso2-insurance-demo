@@ -141,9 +141,23 @@ main() {
     log_header "Step 5: Key Manager (Skipped - Already Configured)"
   fi
   
-  # Step 6: Setup Application (skip if already initialized)
+  # Step 6: Setup Users and Groups (skip if already initialized)
   if [ "$first_run" = true ]; then
-    log_header "Step 6: Setting up Application"
+    log_header "Step 6: Setting up Users and Groups"
+    if [ -f "$SCRIPTS_DIR/setup-users-groups.sh" ]; then
+      "$SCRIPTS_DIR/setup-users-groups.sh" || {
+        log_warn "Users and groups setup completed with warnings (continuing)"
+      }
+    else
+      log_warn "setup-users-groups.sh not found, skipping"
+    fi
+  else
+    log_header "Step 6: Users and Groups (Skipped - Already Configured)"
+  fi
+  
+  # Step 7: Setup Application (skip if already initialized)
+  if [ "$first_run" = true ]; then
+    log_header "Step 7: Setting up Application"
     if [ -f "$SCRIPTS_DIR/setup-app.sh" ]; then
       "$SCRIPTS_DIR/setup-app.sh" || {
         log_error "Application setup failed"
@@ -157,11 +171,11 @@ main() {
     touch "$INIT_MARKER"
     log_success "First-time initialization completed - marker created"
   else
-    log_header "Step 6: Application (Skipped - Already Configured)"
+    log_header "Step 7: Application (Skipped - Already Configured)"
   fi
   
-  # Step 7: Start Frontend
-  log_header "Step 7: Starting Frontend"
+  # Step 8: Start Frontend
+  log_header "Step 8: Starting Frontend"
   if [ -f "$SCRIPTS_DIR/start-frontend.sh" ]; then
     "$SCRIPTS_DIR/start-frontend.sh" &
     local frontend_pid=$!

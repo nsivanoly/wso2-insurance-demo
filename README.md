@@ -571,6 +571,14 @@ Configured in WSO2 Identity Server:
 - **Employees** - Claims processing, policy management
 - **Customers** - View policies, submit claims
 
+### Test User Details
+
+| Group     | Username | Password  |
+|-----------|----------|-----------|
+| Employee  | kim      | aBcd!23#  |
+| Employee  | alice    | Xyz@456!  |
+| Customer  | john     | Pass@789# |
+
 ### Token Structure
 
 ID Token contains:

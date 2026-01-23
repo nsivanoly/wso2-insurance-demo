@@ -370,7 +370,18 @@ register_app_in_is() {
 {
   "name": "${is_app_name}",
   "description": "Insurance Frontend Application",
-  "isManagementApp": false
+  "isManagementApp": false,
+  "claimConfiguration": {
+    "dialect": "LOCAL",
+    "requestedClaims": [
+      {
+          "claim": {
+              "uri": "http://wso2.org/claims/groups"
+          },
+          "mandatory": false
+      }
+    ]
+  }
 }
 EOF
 )
