@@ -374,16 +374,16 @@ main() {
   }
   
   # User data (name:givenName:familyName:password:email:empNum)
-  local kim_data="kim:Kim:Berry:aBcd!23#:kim@gmail.com:E_001"
-  local alice_data="alice:Alice:Johnson:Xyz@456!:alice@gmail.com:E_002"
-  local john_data="john:John:Doe:Pass@789#:john@gmail.com:C_001"
+  local ahmed_data="ahmed:Ahmed:Khalid:aBcd!23#:ahmed@example.com:E_001"
+  local fatima_data="fatima:Fatima:Zahra:Xyz@456!:fatima@example.com:E_002"
+  local omar_data="omar:Omar:Haddad:Pass@789#:omar@example.com:C_001"
   
   # Groups to create
   local employees_group="Employees"
   local customers_group="Customers"
   
   # User-to-group assignments (will be filled as we create users/groups)
-  local kim_id="" alice_id="" john_id=""
+  local ahmed_id="" fatima_id="" omar_id=""
   local employees_id="" customers_id="" admin_id=""
   
   # ==================== CREATE USERS ====================
@@ -391,39 +391,39 @@ main() {
   log_info "Step 1: Creating users..."
   echo ""
   
-  # Create kim
-  IFS=':' read -r username given_name family_name password email empnum <<< "$kim_data"
+  # Create ahmed
+  IFS=':' read -r username given_name family_name password email empnum <<< "$ahmed_data"
   if user_id=$(check_user_exists "$username"); then
-    kim_id="$user_id"
+    ahmed_id="$user_id"
   else
     if user_id=$(create_user "$username" "$given_name" "$family_name" "$password" "$email" "$empnum"); then
-      kim_id="$user_id"
+      ahmed_id="$user_id"
     else
       log_error "Failed to create user: $username"
     fi
   fi
   sleep 1
   
-  # Create alice
-  IFS=':' read -r username given_name family_name password email empnum <<< "$alice_data"
+  # Create fatima
+  IFS=':' read -r username given_name family_name password email empnum <<< "$fatima_data"
   if user_id=$(check_user_exists "$username"); then
-    alice_id="$user_id"
+    fatima_id="$user_id"
   else
     if user_id=$(create_user "$username" "$given_name" "$family_name" "$password" "$email" "$empnum"); then
-      alice_id="$user_id"
+      fatima_id="$user_id"
     else
       log_error "Failed to create user: $username"
     fi
   fi
   sleep 1
   
-  # Create john
-  IFS=':' read -r username given_name family_name password email empnum <<< "$john_data"
+  # Create omar
+  IFS=':' read -r username given_name family_name password email empnum <<< "$omar_data"
   if user_id=$(check_user_exists "$username"); then
-    john_id="$user_id"
+    omar_id="$user_id"
   else
     if user_id=$(create_user "$username" "$given_name" "$family_name" "$password" "$email" "$empnum"); then
-      john_id="$user_id"
+      omar_id="$user_id"
     else
       log_error "Failed to create user: $username"
     fi
@@ -478,28 +478,28 @@ main() {
   log_info "Step 3: Assigning users to groups..."
   echo ""
   
-  # Assign kim to Employees
-  if [ -n "$kim_id" ] && [ -n "$employees_id" ]; then
-    add_user_to_group "$employees_id" "$kim_id" "kim" "$employees_group"
+  # Assign ahmed to Employees
+  if [ -n "$ahmed_id" ] && [ -n "$employees_id" ]; then
+    add_user_to_group "$employees_id" "$ahmed_id" "ahmed" "$employees_group"
     sleep 1
   else
-    log_warn "Cannot assign kim to $employees_group - missing IDs"
+    log_warn "Cannot assign ahmed to $employees_group - missing IDs"
   fi
   
-  # Assign alice to admin
-  if [ -n "$alice_id" ] && [ -n "$admin_id" ]; then
-    add_user_to_group "$admin_id" "$alice_id" "alice" "admin"
+  # Assign fatima to admin
+  if [ -n "$fatima_id" ] && [ -n "$admin_id" ]; then
+    add_user_to_group "$admin_id" "$fatima_id" "fatima" "admin"
     sleep 1
   else
-    log_warn "Cannot assign alice to admin group - missing IDs"
+    log_warn "Cannot assign fatima to admin group - missing IDs"
   fi
   
-  # Assign john to Customers
-  if [ -n "$john_id" ] && [ -n "$customers_id" ]; then
-    add_user_to_group "$customers_id" "$john_id" "john" "$customers_group"
+  # Assign omar to Customers
+  if [ -n "$omar_id" ] && [ -n "$customers_id" ]; then
+    add_user_to_group "$customers_id" "$omar_id" "omar" "$customers_group"
     sleep 1
   else
-    log_warn "Cannot assign john to $customers_group - missing IDs"
+    log_warn "Cannot assign omar to $customers_group - missing IDs"
   fi
   
   echo ""
@@ -510,9 +510,9 @@ main() {
   echo ""
   log_info "=== Setup Summary ==="
   log_info "Users created/verified:"
-  [ -n "$kim_id" ] && log_info "  - kim (ID: $kim_id)"
-  [ -n "$alice_id" ] && log_info "  - alice (ID: $alice_id)"
-  [ -n "$john_id" ] && log_info "  - john (ID: $john_id)"
+  [ -n "$ahmed_id" ] && log_info "  - ahmed (ID: $ahmed_id)"
+  [ -n "$fatima_id" ] && log_info "  - fatima (ID: $fatima_id)"
+  [ -n "$omar_id" ] && log_info "  - omar (ID: $omar_id)"
   
   echo ""
   log_info "Groups created/verified:"

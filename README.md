@@ -575,9 +575,9 @@ Configured in WSO2 Identity Server:
 
 | Group     | Username | Password  |
 |-----------|----------|-----------|
-| Employee  | kim      | aBcd!23#  |
-| Employee  | alice    | Xyz@456!  |
-| Customer  | john     | Pass@789# |
+| Employee  | ahmed    | aBcd!23#  |
+| Employee  | fatima   | Xyz@456!  |
+| Customer  | omar     | Pass@789# |
 
 ### Token Structure
 
