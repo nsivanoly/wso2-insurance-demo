@@ -113,45 +113,17 @@ check_group_exists() {
 
 # ==================== USER CREATION ====================
 
-# Create user via SCIM2 API
+# Create user via SCIM2 API (without enterprise extension)
 create_user() {
   local username="$1"
   local given_name="$2"
   local family_name="$3"
   local password="$4"
   local email="$5"
-  local employee_number="${6:-}"
   
   log_info "Creating user: $username"
   
-  local user_payload
-  if [ -n "$employee_number" ]; then
-    user_payload=$(cat <<EOF
-{
-  "schemas": [
-    "urn:ietf:params:scim:schemas:core:2.0:User",
-    "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"
-  ],
-  "name": {
-    "givenName": "${given_name}",
-    "familyName": "${family_name}"
-  },
-  "userName": "${username}",
-  "password": "${password}",
-  "emails": [
-    {
-      "value": "${email}",
-      "primary": true
-    }
-  ],
-  "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User": {
-    "employeeNumber": "${employee_number}"
-  }
-}
-EOF
-)
-  else
-    user_payload=$(cat <<EOF
+  local user_payload=$(cat <<EOF
 {
   "schemas": [
     "urn:ietf:params:scim:schemas:core:2.0:User"
@@ -171,7 +143,6 @@ EOF
 }
 EOF
 )
-  fi
   
   local response http_code
   response=$(curl -sk -w "\n%{http_code}" -X POST \
@@ -282,9 +253,9 @@ EOF
 EOF
 )
   
-  log_info "PATCH URL: ${IS_HOST}/scim2/Groups/${group_id}" >&2
-  log_info "PATCH Payload:" >&2
-  echo "$patch_payload" | sed 's/^/  /' >&2
+#   log_info "PATCH URL: ${IS_HOST}/scim2/Groups/${group_id}" >&2
+#   log_info "PATCH Payload:" >&2
+#   echo "$patch_payload" | sed 's/^/  /' >&2
   
   local response http_code full_response
   full_response=$(curl -sk -w "\n%{http_code}" -X PATCH \
@@ -300,11 +271,11 @@ EOF
   http_code=$(echo "$full_response" | tail -n1)
   response=$(echo "$full_response" | sed '$d')
   
-  log_info "PATCH Response Code: $http_code" >&2
-  if [ -n "$response" ]; then
-    log_info "PATCH Response Body:" >&2
-    echo "$response" | sed 's/^/  /' >&2
-  fi
+#   log_info "PATCH Response Code: $http_code" >&2
+#   if [ -n "$response" ]; then
+#     log_info "PATCH Response Body:" >&2
+#     echo "$response" | sed 's/^/  /' >&2
+#   fi
   
   if [ "$http_code" = "200" ] || [ "$http_code" = "201" ] || [ "$http_code" = "204" ]; then
     log_success "✅ User '$username' successfully added to group '$groupname'" >&2
@@ -345,11 +316,11 @@ EOF
   replace_code=$(echo "$full_replace" | tail -n1)
   replace_response=$(echo "$full_replace" | sed '$d')
   
-  log_info "PATCH (replace) Response Code: $replace_code" >&2
-  if [ -n "$replace_response" ]; then
-    log_info "PATCH (replace) Response Body:" >&2
-    echo "$replace_response" | sed 's/^/  /' >&2
-  fi
+#   log_info "PATCH (replace) Response Code: $replace_code" >&2
+#   if [ -n "$replace_response" ]; then
+#     log_info "PATCH (replace) Response Body:" >&2
+#     echo "$replace_response" | sed 's/^/  /' >&2
+#   fi
   
   if [ "$replace_code" = "200" ] || [ "$replace_code" = "201" ] || [ "$replace_code" = "204" ]; then
     log_success "✅ User '$username' added to group '$groupname' (via replace)" >&2
@@ -373,10 +344,10 @@ main() {
     exit 1
   }
   
-  # User data (name:givenName:familyName:password:email:empNum)
-  local ahmed_data="ahmed:Ahmed:Khalid:aBcd!23#:ahmed@example.com:E_001"
-  local fatima_data="fatima:Fatima:Zahra:Xyz@456!:fatima@example.com:E_002"
-  local omar_data="omar:Omar:Haddad:Pass@789#:omar@example.com:C_001"
+  # User data (name:givenName:familyName:password:email)
+  local ahmed_data="ahmed:Ahmed:Khalid:aBcd!23#:ahmed@example.com"
+  local fatima_data="fatima:Fatima:Zahra:Xyz@456!:fatima@example.com"
+  local omar_data="omar:Omar:Haddad:Pass@789#:omar@example.com"
   
   # Groups to create
   local employees_group="Employees"
@@ -392,11 +363,11 @@ main() {
   echo ""
   
   # Create ahmed
-  IFS=':' read -r username given_name family_name password email empnum <<< "$ahmed_data"
+  IFS=':' read -r username given_name family_name password email <<< "$ahmed_data"
   if user_id=$(check_user_exists "$username"); then
     ahmed_id="$user_id"
   else
-    if user_id=$(create_user "$username" "$given_name" "$family_name" "$password" "$email" "$empnum"); then
+    if user_id=$(create_user "$username" "$given_name" "$family_name" "$password" "$email"); then
       ahmed_id="$user_id"
     else
       log_error "Failed to create user: $username"
@@ -405,11 +376,11 @@ main() {
   sleep 1
   
   # Create fatima
-  IFS=':' read -r username given_name family_name password email empnum <<< "$fatima_data"
+  IFS=':' read -r username given_name family_name password email <<< "$fatima_data"
   if user_id=$(check_user_exists "$username"); then
     fatima_id="$user_id"
   else
-    if user_id=$(create_user "$username" "$given_name" "$family_name" "$password" "$email" "$empnum"); then
+    if user_id=$(create_user "$username" "$given_name" "$family_name" "$password" "$email"); then
       fatima_id="$user_id"
     else
       log_error "Failed to create user: $username"
@@ -418,11 +389,11 @@ main() {
   sleep 1
   
   # Create omar
-  IFS=':' read -r username given_name family_name password email empnum <<< "$omar_data"
+  IFS=':' read -r username given_name family_name password email <<< "$omar_data"
   if user_id=$(check_user_exists "$username"); then
     omar_id="$user_id"
   else
-    if user_id=$(create_user "$username" "$given_name" "$family_name" "$password" "$email" "$empnum"); then
+    if user_id=$(create_user "$username" "$given_name" "$family_name" "$password" "$email"); then
       omar_id="$user_id"
     else
       log_error "Failed to create user: $username"
