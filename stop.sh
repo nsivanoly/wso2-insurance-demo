@@ -102,7 +102,9 @@ interactive_menu() {
   echo "4) Exit"
   echo ""
 
-  read -r -p "$(echo -e ${YELLOW}Enter your choice [1-4]:${NC}) " choice
+  read -r -p "$(echo -e ${YELLOW}Enter your choice [1-4] - [default 1]:${NC}) " choice
+
+  choice=${choice:-1}
 
   case "$choice" in
     1)
